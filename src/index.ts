@@ -25,4 +25,14 @@ export function artistData(clientItems: string): ArtistData {
   return artistData;
 }
 
-export interface ArtistData { }
+export type ArtistData = ArtistDataEntry[];
+
+export interface ArtistDataEntry {
+  artist?: string;
+  art_id: number;
+  band_id: number;
+  id: number;
+  page_url: string;
+  title: string;
+  type: "track" | "album";
+}
