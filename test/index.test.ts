@@ -1,5 +1,5 @@
 import { HTMLElement } from "node-html-parser";
-import { parser } from "../src/index.js";
+import { artistData, type ArtistData, clientItems, parser } from "../src/index.js";
 
 /**
  * This is used as a demo instead of `fetcher()`.
@@ -12,4 +12,6 @@ async function fetcherTest(_artist: string): Promise<string> {
 
 const html: string = await fetcherTest("rbnaodn");
 const root: HTMLElement = await parser(html);
-console.log(root);
+const items: string = clientItems(root);
+const data: ArtistData = artistData(items);
+console.log(data);
