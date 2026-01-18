@@ -3,6 +3,9 @@
     "module": "NodeNext",
     "target": "ESNext",
     "isolatedModules": true,
+    "lib": [
+      "ESNext"
+    ],
     "noEmit": true,
     "strict": true,
     "noImplicitOverride": true,
