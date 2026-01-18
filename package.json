@@ -5,6 +5,11 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --project ./tsconfig.build.json",
+    "dev": "tsc --watch",
+    "test": "tsx --watch ./test/index.test.ts"
+  },
   "devDependencies": {
     "@types/node": "^25.0.9",
     "typescript": "^5.9.3"
