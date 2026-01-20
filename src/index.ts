@@ -1,14 +1,16 @@
 import { type HTMLElement, parse } from "node-html-parser";
 
-export async function fetcher(artist: string): Promise<string> {
-  const response: Response = await fetch(`https://${artist}.bandcamp.com/`);
-  const html: string = await response.text();
-  return html;
+export function getRootPath(artist: string): string {
+  return `https://${artist}.bandcamp.com/`;
 }
 
-export async function parser(html: string): Promise<HTMLElement> {
-  const root: HTMLElement = parse(html);
-  return root;
+export async function fetchHTML(path: string): Promise<string> {
+  const response: Response = await fetch(path);
+  return response.text();
+}
+
+export function parseHTML(html: string): HTMLElement {
+  return parse(html);
 }
 
 export function releases(root: HTMLElement): string[] {
