@@ -13,10 +13,20 @@ export function parseHTML(html: string): HTMLElement {
   return parse(html);
 }
 
-export function clientItems(root: HTMLElement): string {
-  return root
+export interface ClientItem {
+  art_id: number;
+  artist?: string;
+  band_id: number;
+  id: number;
+  page_url: string;
+  title: string;
+  type: "track" | "album";
+}
+
+export function clientItems(root: HTMLElement): ClientItem[] {
+  return JSON.parse(root
     .querySelector("#music-grid:not(.private)")!
-    .attrs["data-client-items"]!;
+    .attrs["data-client-items"]!) as ClientItem[];
 }
 
 export function releases(root: HTMLElement): string[] {
