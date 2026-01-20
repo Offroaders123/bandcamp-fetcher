@@ -46,10 +46,28 @@ function fetchReleaseHTML(rootPath: string, releasePath: string): Promise<string
   return fetchHTML(path);
 }
 
-export interface Release {
+export type Release = Album | Track;
+
+interface ReleaseLike {
   name: string;
   datePublished: string;
   description?: string;
+}
+
+interface Album extends ReleaseLike {
+  albumRelease: AlbumRelease[];
+  [key: string]: unknown;
+}
+
+interface Track extends ReleaseLike {
+  inAlbum: AlbumRelease;
+}
+
+interface AlbumRelease {
+  offers?: {
+    price: number;
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 
