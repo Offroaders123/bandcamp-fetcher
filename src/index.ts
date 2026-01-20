@@ -56,7 +56,7 @@ interface ReleaseLike {
 
 interface Album extends ReleaseLike {
   albumRelease: AlbumRelease[];
-  [key: string]: unknown;
+  // [key: string]: unknown;
 }
 
 interface Track extends ReleaseLike {
@@ -66,9 +66,9 @@ interface Track extends ReleaseLike {
 interface AlbumRelease {
   offers?: {
     price: number;
-    [key: string]: unknown;
+    // [key: string]: unknown;
   };
-  [key: string]: unknown;
+  // [key: string]: unknown;
 }
 
 function getRelease(releaseRoot: HTMLElement): Release {
