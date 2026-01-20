@@ -13,6 +13,12 @@ export function parseHTML(html: string): HTMLElement {
   return parse(html);
 }
 
+export function clientItems(root: HTMLElement): string {
+  return root
+    .querySelector("#music-grid:not(.private)")!
+    .attrs["data-client-items"]!;
+}
+
 export function releases(root: HTMLElement): string[] {
   return root
     .querySelectorAll("#music-grid:not(.private) .music-grid-item a")
