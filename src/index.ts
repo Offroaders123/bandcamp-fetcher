@@ -46,7 +46,12 @@ function fetchReleaseHTML(rootPath: string, releasePath: string): Promise<string
   return fetchHTML(path);
 }
 
-export interface Release { }
+export interface Release {
+  name: string;
+  datePublished: string;
+  description?: string;
+  [key: string]: unknown;
+}
 
 function getRelease(releaseRoot: HTMLElement): Release {
   return JSON.parse(releaseRoot.querySelector("script[type='application/ld+json']")!.innerHTML) as Release;
