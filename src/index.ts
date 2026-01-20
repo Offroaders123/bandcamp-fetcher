@@ -23,21 +23,21 @@ interface ClientItem {
   type: "track" | "album";
 }
 
-function clientItems(root: HTMLElement): ClientItem[] {
+function getClientItems(root: HTMLElement): ClientItem[] {
   return JSON.parse(root
     .querySelector("#music-grid:not(.private)")!
     .attrs["data-client-items"]!) as ClientItem[];
 }
 
-function gridItemPaths(root: HTMLElement): string[] {
+function getGridItemPaths(root: HTMLElement): string[] {
   return root
     .querySelectorAll("#music-grid:not(.private) .music-grid-item a")
     .map(gridItem => gridItem.attrs["href"]!);
 }
 
-function releasePaths(root: HTMLElement): string[] {
-  const items: ClientItem[] = clientItems(root);
-  const gridPaths: string[] = gridItemPaths(root);
+function getReleasePaths(root: HTMLElement): string[] {
+  const items: ClientItem[] = getClientItems(root);
+  const gridPaths: string[] = getGridItemPaths(root);
   return [...gridPaths, ...items.map(item => item.page_url)];
 }
 
@@ -48,14 +48,18 @@ function fetchReleaseHTML(rootPath: string, releasePath: string): Promise<string
 
 export interface Release { }
 
+function getRelease(releaseRoot: HTMLElement): Release {
+  return JSON.parse(releaseRoot.querySelector("script[type='application/ld+json']")!.innerHTML) as Release;
+}
+
 export async function fetchReleases(artist: string): Promise<Release[]> {
   const rootPath: string = getRootPath(artist);
   const root: HTMLElement = parseHTML(await fetchHTML(rootPath));
-  const releases: string[] = releasePaths(root);
-  const releaseHTMLs: HTMLElement[] = await Promise.all(
-    releases.map(async releasePath =>
+  const releasePaths: string[] = getReleasePaths(root);
+  const releaseRoots: HTMLElement[] = await Promise.all(
+    releasePaths.map(async releasePath =>
       parseHTML(await fetchReleaseHTML(rootPath, releasePath))
     )
   );
-  return releaseHTMLs;
+  return releaseRoots.map(releaseRoot => getRelease(releaseRoot));
 }
