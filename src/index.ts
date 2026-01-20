@@ -13,7 +13,7 @@ export function parseHTML(html: string): HTMLElement {
   return parse(html);
 }
 
-export interface ClientItem {
+interface ClientItem {
   art_id: number;
   artist?: string;
   band_id: number;
@@ -23,14 +23,20 @@ export interface ClientItem {
   type: "track" | "album";
 }
 
-export function clientItems(root: HTMLElement): ClientItem[] {
+function clientItems(root: HTMLElement): ClientItem[] {
   return JSON.parse(root
     .querySelector("#music-grid:not(.private)")!
     .attrs["data-client-items"]!) as ClientItem[];
 }
 
-export function releases(root: HTMLElement): string[] {
+function gridItemPaths(root: HTMLElement): string[] {
   return root
     .querySelectorAll("#music-grid:not(.private) .music-grid-item a")
     .map(gridItem => gridItem.attrs["href"]!);
+}
+
+export function releasePaths(root: HTMLElement): string[] {
+  const items: ClientItem[] = clientItems(root);
+  const gridPaths: string[] = gridItemPaths(root);
+  return [...gridPaths, ...items.map(item => item.page_url)];
 }
