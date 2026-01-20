@@ -46,7 +46,7 @@ function fetchReleaseHTML(rootPath: string, releasePath: string): Promise<string
   return fetchHTML(path);
 }
 
-export type Release = Album | Track;
+type RawRelease = Album | Track;
 
 interface ReleaseLike {
   name: string;
@@ -72,7 +72,17 @@ interface AlbumRelease {
 }
 
 function getRelease(releaseRoot: HTMLElement): Release {
-  return JSON.parse(releaseRoot.querySelector("script[type='application/ld+json']")!.innerHTML) as Release;
+  const release: RawRelease = JSON.parse(
+    releaseRoot.querySelector("script[type='application/ld+json']")!.innerHTML
+  ) as RawRelease;
+  const { name, datePublished: dateReleased, description }: RawRelease = release;
+  return { name, dateReleased, description };
+}
+
+export interface Release {
+  name: string;
+  dateReleased: string;
+  description?: string;
 }
 
 export async function fetchReleases(artist: string): Promise<Release[]> {
