@@ -1,15 +1,15 @@
 import { type HTMLElement, parse } from "node-html-parser";
 
-export function getRootPath(artist: string): string {
+function getRootPath(artist: string): string {
   return `https://${artist}.bandcamp.com`;
 }
 
-export async function fetchHTML(path: string): Promise<string> {
+async function fetchHTML(path: string): Promise<string> {
   const response: Response = await fetch(path);
   return response.text();
 }
 
-export function parseHTML(html: string): HTMLElement {
+function parseHTML(html: string): HTMLElement {
   return parse(html);
 }
 
@@ -35,13 +35,27 @@ function gridItemPaths(root: HTMLElement): string[] {
     .map(gridItem => gridItem.attrs["href"]!);
 }
 
-export function releasePaths(root: HTMLElement): string[] {
+function releasePaths(root: HTMLElement): string[] {
   const items: ClientItem[] = clientItems(root);
   const gridPaths: string[] = gridItemPaths(root);
   return [...gridPaths, ...items.map(item => item.page_url)];
 }
 
-export function fetchReleaseHTML(rootPath: string, releasePath: string): Promise<string> {
+function fetchReleaseHTML(rootPath: string, releasePath: string): Promise<string> {
   const path: string = rootPath + releasePath;
   return fetchHTML(path);
+}
+
+export interface Release { }
+
+export async function fetchReleases(artist: string): Promise<Release[]> {
+  const rootPath: string = getRootPath(artist);
+  const root: HTMLElement = parseHTML(await fetchHTML(rootPath));
+  const releases: string[] = releasePaths(root);
+  const releaseHTMLs: HTMLElement[] = await Promise.all(
+    releases.map(async releasePath =>
+      parseHTML(await fetchReleaseHTML(rootPath, releasePath))
+    )
+  );
+  return releaseHTMLs;
 }
