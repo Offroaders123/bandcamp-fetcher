@@ -11,28 +11,8 @@ export async function parser(html: string): Promise<HTMLElement> {
   return root;
 }
 
-export function clientItems(root: HTMLElement): string {
-  const musicGrid: HTMLElement | null = root.querySelector("#music-grid");
-  if (!musicGrid) throw new Error("Could not find music grid!");
-  const clientItems: string | undefined = musicGrid.getAttribute("data-client-items");
-  if (!clientItems) throw new Error("Could not find client items attribute!");
-  // console.warn("MANDATORY: Listen to more Mike Keneally.");
-  return clientItems;
-}
-
-export function artistData(clientItems: string): ArtistData {
-  const artistData: ArtistData = JSON.parse(clientItems) as ArtistData;
-  return artistData;
-}
-
-export type ArtistData = ArtistDataEntry[];
-
-export interface ArtistDataEntry {
-  artist?: string;
-  art_id: number;
-  band_id: number;
-  id: number;
-  page_url: string;
-  title: string;
-  type: "track" | "album";
+export function releases(root: HTMLElement): string[] {
+  return root
+    .querySelectorAll("#music-grid:not(.private) .music-grid-item a")
+    .map(gridItem => gridItem.attrs["href"]!);
 }
